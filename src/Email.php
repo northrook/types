@@ -12,7 +12,6 @@ use LogicException;
 
 class Email extends Type {
 
-	// public const STRICT = true;
 	public const TYPE = '?string';
 
 	protected string $username;

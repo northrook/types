@@ -1,5 +1,5 @@
 {
-    "name": "martin/types",
+    "name": "northrook/types",
     "description": "Self-validating data types for PHP",
     "type": "library",
     "license": "MIT",
