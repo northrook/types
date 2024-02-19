@@ -1,0 +1,23 @@
+{
+    "name": "martin/types",
+    "description": "Self-validating data types for PHP",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Northrook\\Types\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Martin",
+            "email": "hello@northrook.com"
+        } 
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=8.1",
+		"northrook/support": "dev-main",
+        "egulias/email-validator": "^4.0"
+    }
+}
