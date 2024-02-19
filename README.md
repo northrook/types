@@ -3,7 +3,7 @@
 ## Updating the value
 Create `public function update()`, with the argument `$value`, typed to match.
 
-This method may be used to handle additonal logic, as long as it results in a valid `$value`.
+This method may be used to handle additional logic, as long as it results in a valid `$value`.
 
 Assign the updated value using `$this->updateValue( $value )`.
 

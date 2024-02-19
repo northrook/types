@@ -2,7 +2,6 @@
 
 namespace Northrook\Types;
 
-use Northrook\Types\Exception\InvalidTypeException;
 use ZxcvbnPhp\Zxcvbn;
 
 class Password extends Type {

@@ -5,7 +5,6 @@ namespace Northrook\Types;
 use Northrook\Support\Debug;
 use Northrook\Support\Str;
 use Northrook\Types\Exception\InvalidTypeException;
-use function strtolower;
 
 /**
  * @property $value
@@ -76,7 +75,7 @@ abstract class Type
     final public function __get(?string $name)
     {
         if ('value' == strtolower($name)) {
-            return (string)$this;
+            return $this->__toString();
         }
         if (property_exists($this, $name)) {
             return $this->{$name};
