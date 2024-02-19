@@ -1,2 +1,2 @@
-# types
-Self-validating data types for PHP.
+# Self-validating data types for PHP
+
