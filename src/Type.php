@@ -1,4 +1,4 @@
-<?php declare (strict_types=1);
+<?php declare ( strict_types = 1 );
 
 namespace Northrook\Types;
 
@@ -13,147 +13,150 @@ use Northrook\Types\Exception\InvalidTypeException;
 abstract class Type
 {
 
-    public readonly string $type;
+	public readonly string $type;
 
-    public const STRICT = false;
-    public const TYPE = 'undefined';
+	public const STRICT = false;
+	public const TYPE   = 'undefined';
 
-    protected mixed $value;
-    protected bool $isValid;
-    protected array $history = [];
+	protected mixed $value;
+	protected bool  $isValid;
+	protected array $history = [];
 
-    abstract static function type(): self;
+	abstract static function type() : self;
 
-    final protected function updateValue(mixed $value, bool $revalidate = true): void
-    {
+	/**
+	 * @param  mixed  $value
+	 * @param  bool  $validate  Will validate against TYPE or custom validate() method
+	 * @param  mixed  ...$vars
+	 */
+	protected function __construct( mixed $value = null, bool $validate = true, ...$vars ) {
+		$this->assignVariables( $vars );
+		$this->updateValue( $value, $validate );
 
-        $this->value = $value;
 
-        if ($revalidate) {
-            $this->isValid = $this->validate();
-        }
+		$this->type = $this::TYPE;
+	}
 
 
-        if (!$this->isValid) {
+	final protected function assignVariables( array $vars ) : void {
+		foreach ( $vars as $property => $assign ) {
+			if ( property_exists( $this, $property ) ) {
+				$this->{$property} = $assign;
+			}
+		}
+	}
 
-            if (self::STRICT) {
-                $exception = new InvalidTypeException(
-                    'The type "' . $this::class . '" did not pass validation.',
-                    $this->value,
-                    $this::TYPE
-                );
+	final protected function updateValue( mixed $value, bool $revalidate = true ) : void {
 
-                Debug::log('The type "' . $this::class . '" did not pass validation.', $exception, 'fatal');
+		$this->value = $value;
 
-            } else if (!empty($this->history)) {
+		if ( $revalidate ) {
+			$this->isValid = $this->validate();
+		}
 
-                $last = array_pop($this->history);
-                Debug::log(
-                    'The type "' . $this::class . '" did not pass validation, falling back to previous value.',
-                    [
-                        'failedValue' => $this->value,
-                        'fallbackValue' => $last,
-                        'caller' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)[1],
-                        'type' => $this,
-                    ],
-                );
-                $this->value = $last;
-            } else {
-                Debug::log('The type "' . $this::class . '" did not pass validation.',
-                    [
-                        'failedValue' => $this->value,
-                        'caller' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)[1],
-                        'type' => $this,
-                    ]);
-            }
-        }
 
-        $this->history[] = $this->value;
+		if ( !$this->isValid ) {
 
-    }
+			if ( self::STRICT ) {
+				$exception = new InvalidTypeException(
+					'The type "' . $this::class . '" did not pass validation.',
+					$this->value,
+					$this::TYPE
+				);
 
-    final public function __get(?string $name)
-    {
-        if ('value' == strtolower($name)) {
-            return $this->__toString();
-        }
-        if (property_exists($this, $name)) {
-            return $this->{$name};
-        }
+				Debug::log( 'The type "' . $this::class . '" did not pass validation.', $exception, 'fatal' );
 
-        return null;
-    }
+			}
+			else {
+				if ( !empty( $this->history ) ) {
 
-    final public function __toString()
-    {
+					$last = array_pop( $this->history );
+					Debug::log(
+						'The type "' . $this::class . '" did not pass validation, falling back to previous value.',
+						[
+							'failedValue'   => $this->value,
+							'fallbackValue' => $last,
+							'caller'        => debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS )[ 1 ],
+							'type'          => $this,
+						],
+					);
+					$this->value = $last;
+				}
+				else {
+					Debug::log(
+						'The type "' . $this::class . '" did not pass validation.',
+						[
+							'failedValue' => $this->value,
+							'caller'      => debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS )[ 1 ],
+							'type'        => $this,
+						],
+					);
+				}
+			}
+		}
 
-        if (false === isset($this->isValid)) {
-            $this->isValid = $this->validate();
-        }
+		$this->history[] = $this->value;
 
-        if (is_string($this->value)) {
-            return $this->value;
-        }
+	}
 
-        return Str::asJson($this->value) ?? '';
+	final public function __get( ?string $name ) {
+		if ( 'value' == strtolower( $name ) ) {
+			return $this->__toString();
+		}
+		if ( property_exists( $this, $name ) ) {
+			return $this->{$name};
+		}
 
-    }
+		return null;
+	}
 
-    /**
-     * @param mixed $value
-     * @param bool $validate Will validate against TYPE or custom validate() method
-     * @param mixed ...$vars
-     */
-    protected function __construct(mixed $value = null, bool $validate = true, ...$vars)
-    {
+	final public function __toString() {
 
-        foreach ($vars as $property => $assign) {
-            if (property_exists($this, $property)) {
-                $this->{$property} = $assign;
-            }
-        }
+		if ( false === isset( $this->isValid ) ) {
+			$this->isValid = $this->validate();
+		}
 
-        $this->updateValue($value, $validate);
-        $this->type = $this::TYPE;
-        // if ( $validate ) {
-        // 	$this->validate();
-        // }
-    }
+		if ( is_string( $this->value ) ) {
+			return $this->value;
+		}
 
-    protected function validType(?string $type = null): bool
-    {
+		return Str::asJson( $this->value ) ?? '';
 
-        $value = strtolower(gettype($this->value));
+	}
 
-        if (null === $type) {
-            $type = self::TYPE;
-        } else {
-            return $value === strtolower($type);
-        }
+	protected function validType( ?string $type = null ) : bool {
 
-        $types = [];
+		$value = strtolower( gettype( $this->value ) );
 
-        if (str_contains($type, '?')) {
-            $types[] = 'null';
-        }
+		if ( null === $type ) {
+			$type = self::TYPE;
+		}
+		else {
+			return $value === strtolower( $type );
+		}
 
-        $types = array_merge(
-            $types,
-            explode(
-                '|',
-                strtolower(str_replace('?', '', $this::TYPE))
-            )
-        );
+		$types = [];
 
-        return in_array($value, $types);
-    }
+		if ( str_contains( $type, '?' ) ) {
+			$types[] = 'null';
+		}
 
-    protected function validate(): bool
-    {
+		$types = array_merge(
+			$types,
+			explode(
+				'|',
+				strtolower( str_replace( '?', '', $this::TYPE ) ),
+			),
+		);
 
-        $this->isValid = $this->validType();
+		return in_array( $value, $types );
+	}
 
-        return $this->isValid;
-    }
+	protected function validate() : bool {
+
+		$this->isValid = $this->validType();
+
+		return $this->isValid;
+	}
 
 }
