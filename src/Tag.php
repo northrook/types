@@ -44,7 +44,10 @@ enum Tag
 	case h3;
 	case h4;
 
-//	final public function __toString(): string {
-//		return $this->name;
-//	}
+	public function isSelfClosing(): bool {
+		return in_array( $this->name, [
+			'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source',
+			'track', 'wbr',
+		] );
+	}
 }

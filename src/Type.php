@@ -101,7 +101,7 @@ abstract class Type implements TypeInterface
 
 	}
 
-	final public function __get( ?string $name ) {
+	final public function __get( ?string $name ) : mixed {
 		if ( 'value' == strtolower( $name ) ) {
 			return $this->__toString();
 		}

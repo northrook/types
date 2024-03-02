@@ -2,17 +2,14 @@
 
 namespace Northrook\Types;
 
-use Countable;
-use IteratorAggregate;
-use Traversable;
-
 class Attributes implements TypeInterface
 {
 
-	public string | null $id    = null;
-	public array | null  $class = [];
-	public array | null  $style = [];
-	private array        $data;
+	public string | null         $id        = null;
+	public string | array | null $class     = [];
+	public string | array | null $style     = [];
+	private array                $data;
+	public ?bool                 $isValid = null;
 
 
 	private function __construct(
@@ -37,36 +34,101 @@ class Attributes implements TypeInterface
 		return new attributes( $id, $class, $style, $data );
 	}
 
-	public function __toString() {
-		$classes = implode( ' ', $this->class );
-		$styles = implode( '; ', $this->style );
+	public function __invoke() : array {
+		return [
+			       'id'    => $this->id,
+			       'class' => $this->class,
+			       'style' => $this->style,
+		       ] + $this->getDataAttributes();
+	}
 
+	private function getDataAttributes() : array {
 		$attributes = [];
-
 		foreach ( $this->data as $name => $value ) {
 			$value = match ( gettype( $value ) ) {
 				'string'  => $value,
 				'boolean' => $value ? 'true' : 'false',
 				'object'  => $value->__toString(),
-				'array'   => implode( ' ', $value ),
+				'array'   => implode( ' ', array_filter( $value ) ),
 				'NULL'    => null,
 				default   => (string) $value,
-
 			};
 
+			if ( in_array( $name, [ 'disabled', 'readonly', 'required', 'checked', 'hidden' ] ) ) {
+				$value = null;
+			}
+
 			$attributes[] = ( null === $value ) ? $name : "$name=\"$value\"";
+		}
+
+		return $attributes;
+	}
+
+	public function __toString() {
+
+		if ( !is_string( $this->class ) ) {
+			$this->class = implode( ' ', $this->class );
+		}
+
+		if ( !is_string( $this->style ) ) {
+			$this->style = implode( '; ', $this->style );
 		}
 
 		return implode(
 			' ', array_filter(
 			[
 				$this->id ? "id=\"$this->id\"" : null,
-				$this->class ? "class=\"$classes\"" : null,
-				$this->style ? "style=\"$styles\"" : null,
-				...$attributes,
+				$this->class ? "class=\"$this->class\"" : null,
+				$this->style ? "style=\"$this->style\"" : null,
+				...$this->getDataAttributes(),
 			],
 		),
 		);
+	}
+
+	public function get( string $name ) : mixed {
+		return $this->data[ $name ] ?? null;
+	}
+
+	public function set( string $name, mixed $value, bool $override = true ) : self {
+
+		if ( !$override && $this->has( $name ) ) {
+			return $this;
+		}
+
+		if ( $name === 'id' ) {
+			$this->id = $value;
+		}
+
+		if ( $name === 'class' ) {
+			$classes = is_string( $value ) ? explode( ' ', $value ) : $value ?? [];
+			$this->class = array_merge( $this->class, $classes );
+		}
+
+		if ( $name === 'style' ) {
+			$styles = is_string( $value ) ? explode( ' ', $value ) : $value ?? [];
+			$this->style = array_merge( $this->style, $styles );
+		}
+
+		$this->data[ $name ] = $value;
+
+		return $this;
+	}
+
+	public function has( string | array $name ) : bool {
+		if ( is_string( $name ) ) {
+			return isset( $this->data[ $name ] );
+		}
+
+		foreach ( $name as $key => $boolean ) {
+			if ( is_string( $key ) ) {
+				return isset( $this->data[ $key ] ) === $boolean;
+			}
+
+			return isset( $this->data[ $key ] );
+		}
+
+		return false;
 	}
 
 	public function __get( ?string $name ) : mixed {
