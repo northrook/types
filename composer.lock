@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c0f69f64add233e0a5820a5e7f03795b",
+    "content-hash": "abc86cf8ddd62de4f8b60dfccc29fce7",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -257,17 +257,59 @@
             "time": "2023-04-27T13:56:18+00:00"
         },
         {
+            "name": "northrook/logger",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/northrook/logger.git",
+                "reference": "adef49a0faa2097536213ecc7bd7d9ba494b0dfb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/northrook/logger/zipball/adef49a0faa2097536213ecc7bd7d9ba494b0dfb",
+                "reference": "adef49a0faa2097536213ecc7bd7d9ba494b0dfb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1",
+                "psr/log": "^1|^2|^3"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Northrook\\Logger\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martin Nielsen",
+                    "email": "mn@northrook.com"
+                }
+            ],
+            "description": "PSR-3 compliant logging, and global stopwatch timer.",
+            "support": {
+                "issues": "https://github.com/northrook/logger/issues",
+                "source": "https://github.com/northrook/logger/tree/main"
+            },
+            "time": "2024-03-02T12:47:35+00:00"
+        },
+        {
             "name": "northrook/support",
             "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/northrook/support-functions.git",
-                "reference": "1b8805333dfc70aec1fbac0fa6c9a54e6ff10765"
+                "reference": "bd18be0888889eb683bb74333ea71e0fb5d67283"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/northrook/support-functions/zipball/1b8805333dfc70aec1fbac0fa6c9a54e6ff10765",
-                "reference": "1b8805333dfc70aec1fbac0fa6c9a54e6ff10765",
+                "url": "https://api.github.com/repos/northrook/support-functions/zipball/bd18be0888889eb683bb74333ea71e0fb5d67283",
+                "reference": "bd18be0888889eb683bb74333ea71e0fb5d67283",
                 "shasum": ""
             },
             "require": {
@@ -300,7 +342,7 @@
                 "issues": "https://github.com/northrook/support-functions/issues",
                 "source": "https://github.com/northrook/support-functions/tree/main"
             },
-            "time": "2024-02-29T06:21:02+00:00"
+            "time": "2024-03-01T15:55:15+00:00"
         },
         {
             "name": "psr/log",
@@ -749,7 +791,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "northrook/support": 20
+        "northrook/support": 20,
+        "northrook/logger": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

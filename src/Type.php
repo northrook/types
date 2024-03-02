@@ -2,6 +2,7 @@
 
 namespace Northrook\Types;
 
+use Northrook\Logger\Log;
 use Northrook\Support\Debug;
 use Northrook\Support\Str;
 use Northrook\Types\Exception\InvalidTypeException;
@@ -10,7 +11,7 @@ use Northrook\Types\Exception\InvalidTypeException;
  * @property $value
  * @property bool $isValid
  * */
-abstract class Type
+abstract class Type implements TypeInterface
 {
 
 	public readonly string $type;
@@ -22,7 +23,7 @@ abstract class Type
 	protected bool  $isValid;
 	protected array $history = [];
 
-	abstract static function type() : self;
+	abstract public static function type() : self;
 
 	/**
 	 * @param  mixed  $value
@@ -32,8 +33,6 @@ abstract class Type
 	protected function __construct( mixed $value = null, bool $validate = true, ...$vars ) {
 		$this->assignVariables( $vars );
 		$this->updateValue( $value, $validate );
-
-
 		$this->type = $this::TYPE;
 	}
 
@@ -64,7 +63,10 @@ abstract class Type
 					$this::TYPE
 				);
 
-				Debug::log( 'The type "' . $this::class . '" did not pass validation.', $exception, 'fatal' );
+				Log::error( 'The type {class} did not pass validation.', [
+					'class'     => $this::class,
+					'exception' => $exception,
+				] );
 
 			}
 			else {

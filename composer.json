@@ -18,6 +18,7 @@
     "require": {
         "php": ">=8.1",
 		"northrook/support": "dev-main",
+        "northrook/logger": "dev-main",
         "egulias/email-validator": "^4.0"
     }
 }
