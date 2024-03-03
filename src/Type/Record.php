@@ -31,10 +31,15 @@ abstract class Record extends stdClass implements Countable, IteratorAggregate
 		return $this;
 	}
 
-	public function set( string | array $value ) : static {
-		$this->records = (array) $value;
+	public function set( string | int | null $key, mixed $value = null ) : void {
+		if ( $key ) {
+			$this->records[ $key ] = $value;
+			return;
+		}
 
-		return $this;
+		if ( $value ) {
+			$this->records[] = $value;
+		}
 	}
 
 	public function get( string | int | null $key = null, mixed $default = null ) : mixed {
