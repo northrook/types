@@ -2,12 +2,15 @@
 
 namespace Northrook\Types;
 
+use JetBrains\PhpStorm\Deprecated;
+
+#[Deprecated]
 class Attributes implements TypeInterface
 {
 
-	public string | null         $id        = null;
-	public string | array | null $class     = [];
-	public string | array | null $style     = [];
+	public string | null         $id      = null;
+	public string | array | null $class   = [];
+	public string | array | null $style   = [];
 	private array                $data;
 	public ?bool                 $isValid = null;
 

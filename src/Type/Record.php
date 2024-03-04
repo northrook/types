@@ -10,6 +10,7 @@ use Traversable;
 
 abstract class Record extends stdClass implements Countable, IteratorAggregate
 {
+
 	private array $records;
 
 	final public function __invoke() : array {
@@ -70,7 +71,12 @@ abstract class Record extends stdClass implements Countable, IteratorAggregate
 		return $grab;
 	}
 
-	public function has( string | int | null $key, mixed $value = null ) : bool {
+	public function has( string | int | null $key = null, mixed $value = null ) : bool {
+
+		if ( $this->isSequential() ) {
+			return in_array( $key, $this->records );
+		}
+
 		if ( $key ) {
 			return isset( $this->records[ $key ] );
 		}
@@ -94,6 +100,14 @@ abstract class Record extends stdClass implements Countable, IteratorAggregate
 	public function getIterator() : Traversable {
 		return new ArrayIterator( $this->records );
 
+	}
+
+	protected function isSequential() : bool {
+		return array_is_list( $this->records );
+	}
+
+	protected function isAssociative() : bool {
+		return !array_is_list( $this->records );
 	}
 
 

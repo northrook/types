@@ -2,34 +2,18 @@
 
 namespace Northrook\Types;
 
-class Path extends Type
+use Northrook\Support\Attribute\Development;
+use Stringable;
+
+#[Development( 'started' )]
+class Path extends Type implements Stringable
 {
-	private static string $rootPath;
 
-	protected bool   $isAbsolute = false;
-	public readonly string $path;
-	public readonly string $url;
+	protected const TYPE = 'path';
 
-
-	public function __construct(
+	public static function type(
 		?string $string = null,
-		?string $rootPath = null,
-	) {
-		$this->rootPath($rootPath ?? $_SERVER['DOCUMENT_ROOT']);
-
-
-	}
-
-	private function rootPath( string $path ): void {
-		if ( isset( $this::$rootPath ) ) {
-			return;
-		}
-
-		$this::$rootPath = $path;
-
-	}
-
-	public static function type( ?string $string = null, ?string $rootPath = null ) : Path {
-		return new static( $string, $rootPath );
+	) : Path {
+		return new static( $string );
 	}
 }

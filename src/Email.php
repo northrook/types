@@ -7,10 +7,14 @@ use Egulias\EmailValidator\Validation\Extra\SpoofCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use LogicException;
+use Northrook\Support\Attribute\Development;
+use Stringable;
 
 // TODO: Support blacklist and whitelist words, domains and tlds
 
-class Email extends Type {
+#[Development( 'mvp' )]
+class Email extends Type implements Stringable
+{
 
 	public const TYPE = '?string';
 
@@ -18,47 +22,49 @@ class Email extends Type {
 	protected string $domain;
 	protected string $tld;
 
-	public function update( ?string $value ): Email {
+	public function update( ?string $value ) : Email {
 		$this->updateValue( $value );
 
 		return $this;
 	}
 
-	public static function type( ?string $string = null, bool $validate = true ): self {
+	public static function type( ?string $string = null, bool $validate = true ) : self {
 		return new static( $string, $validate );
 	}
 
-	private function explodeEmail(): void {
+	private function explodeEmail() : void {
 
 		$email = explode( '@', (string) $this->value );
-		$this->username = $email[0];
-		$this->domain = strstr( $email[1], '.', true );
-		$this->tld = substr( $email[1], strpos( $email[1], '.' ) + 1 );
+		$this->username = $email[ 0 ];
+		$this->domain = strstr( $email[ 1 ], '.', true );
+		$this->tld = substr( $email[ 1 ], strpos( $email[ 1 ], '.' ) + 1 );
 
 	}
 
-	protected function validate(): bool {
+	protected function validate() : bool {
 
 		if ( $this->validType( 'null' ) ) {
 			return true;
 		}
 
-		if ( ! class_exists( EmailValidator::class ) ) {
-			throw new LogicException( 'EmailValidator not installed. Ensure that the "egulias/email-validator" package is installed.' );
+		if ( !class_exists( EmailValidator::class ) ) {
+			throw new LogicException(
+				'EmailValidator not installed. Ensure that the "egulias/email-validator" package is installed.'
+			);
 		}
 
 		$validator = new EmailValidator();
 
 		$validate = new MultipleValidationWithAnd( [
-			new NoRFCWarningsValidation(),
-			new SpoofCheckValidation(),
-		] );
+			                                           new NoRFCWarningsValidation(),
+			                                           new SpoofCheckValidation(),
+		                                           ] );
 
 		// \var_dump($validator);
 
 		$this->isValid = $validator->isValid(
 			$this->value ?? '',
-			$validate
+			$validate,
 		);
 
 		if ( $this->isValid ) {

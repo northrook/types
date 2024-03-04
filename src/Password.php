@@ -2,9 +2,13 @@
 
 namespace Northrook\Types;
 
+use Northrook\Support\Attribute\Development;
+use Stringable;
 use ZxcvbnPhp\Zxcvbn;
 
-class Password extends Type {
+#[Development( 'mvp' )]
+class Password extends Type implements Stringable
+{
 
 	public const TYPE = 'string';
 
@@ -12,43 +16,44 @@ class Password extends Type {
 
 	protected readonly int $minimumStrength;
 	protected readonly int $strength;
-	protected array $context = [];
-	public readonly array $score;
+	protected array        $context = [];
+	public readonly array  $score;
 
 
-	public static function setDefaultStrength( int $strength ): void {
+	public static function setDefaultStrength( int $strength ) : void {
 		self::$defaultStrength = $strength;
 	}
 
-    public static function type(
-			?string $string = null,
-			?int $strength = null,
-		array $context = [],
-		bool $validate = true
-	): Password {
+	public static function type(
+		?string $string = null,
+		?int    $strength = null,
+		array   $context = [],
+		bool    $validate = true,
+	) : Password {
 		return new static(
-			value: $string,
-			validate: $validate,
-			minimunStrength: $strength ?? self::$defaultStrength,
-			context: $context,
+			value           : $string,
+			validate        : $validate,
+			minimunStrength : $strength ?? self::$defaultStrength,
+			context         : $context,
 		);
 	}
 
-	private function minimumStrength(): int {
+	private function minimumStrength() : int {
 		return max( 0, min( 4, $this->minimumStrength ) );
 	}
 
-	protected function validate(): bool {
+	protected function validate() : bool {
 
 		$validator = new Zxcvbn();
 
 		$this->score = $validator->passwordStrength( $this->value ?? '', $this->context );
 
-		$this->strength = $this->score['score'] ?? 0;
+		$this->strength = $this->score[ 'score' ] ?? 0;
 
 		if ( $this->strength < $this->minimumStrength() ) {
 			$this->isValid = false;
-		} else {
+		}
+		else {
 			$this->isValid = true;
 		}
 

@@ -4,7 +4,11 @@ namespace Northrook\Types;
 
 // TODO: https://www.php.net/manual/en/function.uniqid.php
 
-class ID extends Type
+use Northrook\Support\Attribute\Development;
+use Stringable;
+
+#[Development( 'started' )]
+class ID extends Type implements Stringable
 {
 
 	public const TYPE = 'string';

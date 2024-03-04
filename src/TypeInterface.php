@@ -2,6 +2,9 @@
 
 namespace Northrook\Types;
 
+use JetBrains\PhpStorm\Deprecated;
+
+#[Deprecated]
 interface TypeInterface
 {
 	public const STRICT = false;

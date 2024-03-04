@@ -3,21 +3,24 @@
 namespace Northrook\Types;
 
 use Northrook\Logger\Log;
+use Northrook\Support\Attribute\Development;
 use Northrook\Support\Debug;
 use Northrook\Support\Str;
 use Northrook\Types\Exception\InvalidTypeException;
+use stdClass;
 
 /**
  * @property $value
  * @property bool $isValid
  * */
-abstract class Type implements TypeInterface
+#[Development( 'static' )]
+abstract class Type extends stdClass
 {
+	protected const TYPE   = null;
+	protected const STRICT = false;
 
 	public readonly string $type;
 
-	public const STRICT = false;
-	public const TYPE   = 'undefined';
 
 	protected mixed $value;
 	protected bool  $isValid;
@@ -31,9 +34,13 @@ abstract class Type implements TypeInterface
 	 * @param  mixed  ...$vars
 	 */
 	protected function __construct( mixed $value = null, bool $validate = true, ...$vars ) {
+		$this->assignType( $value );
 		$this->assignVariables( $vars );
 		$this->updateValue( $value, $validate );
-		$this->type = $this::TYPE;
+	}
+
+	private function assignType( mixed $value ) : void {
+		$this->type = strtolower( $this::TYPE ?? gettype( $value ) );
 	}
 
 
@@ -60,7 +67,7 @@ abstract class Type implements TypeInterface
 				$exception = new InvalidTypeException(
 					'The type "' . $this::class . '" did not pass validation.',
 					$this->value,
-					$this::TYPE
+					$this->type,
 				);
 
 				Log::error( 'The type {class} did not pass validation.', [
@@ -73,24 +80,23 @@ abstract class Type implements TypeInterface
 				if ( !empty( $this->history ) ) {
 
 					$last = array_pop( $this->history );
-					Debug::log(
-						'The type "' . $this::class . '" did not pass validation, falling back to previous value.',
+
+					Log::Warning(
+						'The type "{class}" did not pass validation. Falling back to previous value {previous}.',
 						[
-							'failedValue'   => $this->value,
-							'fallbackValue' => $last,
-							'caller'        => debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS )[ 1 ],
-							'type'          => $this,
+							'class'    => $this::class,
+							'previous' => $last,
+							'type'     => $this,
 						],
 					);
-					$this->value = $last;
 				}
 				else {
-					Debug::log(
-						'The type "' . $this::class . '" did not pass validation.',
+					Log::Warning(
+						'The value {value} did not pass validation in type "{class}".',
 						[
-							'failedValue' => $this->value,
-							'caller'      => debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS )[ 1 ],
-							'type'        => $this,
+							'class' => $this::class,
+							'value' => $this->value,
+							'type'  => $this,
 						],
 					);
 				}
@@ -112,7 +118,7 @@ abstract class Type implements TypeInterface
 		return null;
 	}
 
-	final public function __toString() {
+	public function __toString() : string {
 
 		if ( false === isset( $this->isValid ) ) {
 			$this->isValid = $this->validate();
@@ -128,13 +134,11 @@ abstract class Type implements TypeInterface
 
 	protected function validType( ?string $type = null ) : bool {
 
-		$value = strtolower( gettype( $this->value ) );
-
 		if ( null === $type ) {
-			$type = self::TYPE;
+			$type = $this->type;
 		}
 		else {
-			return $value === strtolower( $type );
+			return $this->type === strtolower( $type );
 		}
 
 		$types = [];
@@ -147,11 +151,11 @@ abstract class Type implements TypeInterface
 			$types,
 			explode(
 				'|',
-				strtolower( str_replace( '?', '', $this::TYPE ) ),
+				strtolower( str_replace( '?', '', $this->type ) ),
 			),
 		);
 
-		return in_array( $value, $types );
+		return in_array( $this->type, $types );
 	}
 
 	protected function validate() : bool {

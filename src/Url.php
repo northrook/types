@@ -2,11 +2,14 @@
 
 namespace Northrook\Types;
 
+use Northrook\Support\Attribute\Development;
+
+#[Development( 'pending' )]
 class Url extends Type
 {
 	private static string $rootPath;
 
-	protected bool   $isAbsolute = false;
+	protected bool         $isAbsolute = false;
 	public readonly string $path;
 	public readonly string $url;
 
@@ -15,12 +18,12 @@ class Url extends Type
 		?string $string = null,
 		?string $rootPath = null,
 	) {
-		$this->rootPath($rootPath ?? $_SERVER['DOCUMENT_ROOT']);
+		$this->rootPath( $rootPath ?? $_SERVER[ 'DOCUMENT_ROOT' ] );
 
 
 	}
 
-	private function rootPath( string $path ): void {
+	private function rootPath( string $path ) : void {
 		if ( isset( $this::$rootPath ) ) {
 			return;
 		}

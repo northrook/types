@@ -2,6 +2,9 @@
 
 namespace Northrook\Types;
 
+use Northrook\Support\Attribute\Development;
+
+#[Development( 'pending' )]
 class Asset extends Type
 {
 
