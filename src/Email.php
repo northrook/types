@@ -7,7 +7,7 @@ use Egulias\EmailValidator\Validation\Extra\SpoofCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use LogicException;
-use Northrook\Support\Attribute\Development;
+use Northrook\Support\Attributes\Development;
 use Stringable;
 
 // TODO: Support blacklist and whitelist words, domains and tlds

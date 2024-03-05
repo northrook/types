@@ -3,6 +3,7 @@
 namespace Northrook\Types;
 
 use JetBrains\PhpStorm\Deprecated;
+use JetBrains\PhpStorm\NoReturn;
 
 #[Deprecated]
 class Attributes
@@ -15,6 +16,7 @@ class Attributes
 	public ?bool                 $isValid = null;
 
 
+	#[NoReturn]
 	private function __construct(
 		string | null         $id,
 		string | array | null $class = null,

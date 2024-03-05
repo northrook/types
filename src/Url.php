@@ -2,7 +2,7 @@
 
 namespace Northrook\Types;
 
-use Northrook\Support\Attribute\Development;
+use Northrook\Support\Attributes\Development;
 
 #[Development( 'pending' )]
 class Url extends Type
@@ -32,7 +32,7 @@ class Url extends Type
 
 	}
 
-	public static function type( ?string $string = null, ?string $rootPath = null ) : Path {
+	public static function type( ?string $string = null, ?string $rootPath = null ) : Url {
 		return new static( $string, $rootPath );
 	}
 }

@@ -3,7 +3,7 @@
 namespace Northrook\Types;
 
 use Northrook\Logger\Log;
-use Northrook\Support\Attribute\Development;
+use Northrook\Support\Attributes\Development;
 use Northrook\Support\Str;
 use Northrook\Types\Exception\InvalidTypeException;
 use stdClass;

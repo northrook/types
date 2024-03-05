@@ -209,8 +209,7 @@ class Collection implements Countable, Traversable, Iterator
 		return $this->array[ $this->position ];
 	}
 
-	#[ReturnTypeWillChange]
-	public function key() : mixed {
+	public function key() : int {
 		return $this->position;
 	}
 

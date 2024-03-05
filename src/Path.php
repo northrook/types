@@ -2,7 +2,7 @@
 
 namespace Northrook\Types;
 
-use Northrook\Support\Attribute\Development;
+use Northrook\Support\Attributes\Development;
 use Stringable;
 
 #[Development( 'mvp' )]
