@@ -5,7 +5,7 @@ namespace Northrook\Types;
 use JetBrains\PhpStorm\Deprecated;
 
 #[Deprecated]
-class Attributes implements TypeInterface
+class Attributes
 {
 
 	public string | null         $id      = null;
@@ -21,6 +21,7 @@ class Attributes implements TypeInterface
 		string | array | null $style = null,
 		array | null          $data = null,
 	) {
+		dd($this);
 		$this->id = $id;
 		$this->class = is_string( $class ) ? explode( ' ', $class ) : $class ?? [];
 		$this->style = is_string( $style ) ? explode( ';', $style ) : $style ?? [];

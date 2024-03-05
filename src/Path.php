@@ -5,10 +5,9 @@ namespace Northrook\Types;
 use Northrook\Support\Attribute\Development;
 use Stringable;
 
-#[Development( 'started' )]
+#[Development( 'mvp' )]
 class Path extends Type implements Stringable
 {
-
 	protected const TYPE = 'path';
 
 	public static function type(
@@ -21,6 +20,12 @@ class Path extends Type implements Stringable
 		$this->value = static::normalize( $this->value );
 
 		return file_exists( $this->value );
+	}
+
+	public function set( string $string ) : Path {
+		$this->updateValue( $string );
+
+		return $this;
 	}
 
 	public function add( string $string ) : Path {
