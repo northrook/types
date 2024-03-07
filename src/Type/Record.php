@@ -8,6 +8,14 @@ use IteratorAggregate;
 use stdClass;
 use Traversable;
 
+/**
+ * Stores a set of records.
+ *
+ * @author  Martin Nielsen <mn@northrook.com>
+ *
+ * @link    https://github.com/northrook Documentation
+ * @todo    Update URL to documentation
+ */
 abstract class Record extends stdClass implements Countable, IteratorAggregate
 {
 

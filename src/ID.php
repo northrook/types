@@ -13,9 +13,9 @@ class ID extends Type implements Stringable
 
 	public const TYPE = 'string';
 
-	protected string $value;
+//	protected string $value;
 	protected bool   $cryptographicallySecure = false;
-	private bool     $quick                   = false;
+	protected bool     $quick                   = false;
 
 	protected function validate() : bool {
 
@@ -24,6 +24,21 @@ class ID extends Type implements Stringable
 		}
 
 		return true;
+	}
+
+	public static function from( string | array $value, ?string $separator = null ) : self {
+		if ( is_array( $value ) ) {
+			$value = implode(
+				$separator ?? '.',
+				array_filter( $value ),
+			);
+		}
+		return new static(
+			value                   : $value,
+			validate                : true,
+			cryptographicallySecure : false,
+			quick                   : false
+		);
 	}
 
 	/**

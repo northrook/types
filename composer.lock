@@ -304,12 +304,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/northrook/support-functions.git",
-                "reference": "8ffd8ec3373ceb5f8096986daff4b70d5c18c774"
+                "reference": "518339548d082a93683597ed04d170754702f4c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/northrook/support-functions/zipball/8ffd8ec3373ceb5f8096986daff4b70d5c18c774",
-                "reference": "8ffd8ec3373ceb5f8096986daff4b70d5c18c774",
+                "url": "https://api.github.com/repos/northrook/support-functions/zipball/518339548d082a93683597ed04d170754702f4c3",
+                "reference": "518339548d082a93683597ed04d170754702f4c3",
                 "shasum": ""
             },
             "require": {
@@ -342,7 +342,7 @@
                 "issues": "https://github.com/northrook/support-functions/issues",
                 "source": "https://github.com/northrook/support-functions/tree/main"
             },
-            "time": "2024-03-05T07:20:23+00:00"
+            "time": "2024-03-05T09:43:31+00:00"
         },
         {
             "name": "psr/log",
