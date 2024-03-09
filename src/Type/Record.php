@@ -6,6 +6,7 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use stdClass;
+use StringType;
 use Traversable;
 
 /**
@@ -18,7 +19,7 @@ use Traversable;
  */
 abstract class Record extends stdClass implements Countable, IteratorAggregate
 {
-
+	
 	private array $records;
 
 	final public function __invoke() : array {

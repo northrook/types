@@ -1,6 +1,6 @@
 <?php declare ( strict_types = 1 );
 
-namespace Northrook\Types;
+namespace Northrook\Types\Type;
 
 use Northrook\Logger\Log;
 use Northrook\Support\Attributes\Development;

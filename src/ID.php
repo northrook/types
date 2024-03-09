@@ -5,6 +5,7 @@ namespace Northrook\Types;
 // TODO: https://www.php.net/manual/en/function.uniqid.php
 
 use Northrook\Support\Attributes\Development;
+use Northrook\Types\Type\Type;
 use Stringable;
 
 #[Development( 'started' )]

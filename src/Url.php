@@ -3,6 +3,7 @@
 namespace Northrook\Types;
 
 use Northrook\Support\Attributes\Development;
+use Northrook\Types\Type\Type;
 
 #[Development( 'pending' )]
 class Url extends Type

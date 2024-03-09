@@ -172,57 +172,62 @@ namespace Northrook\Types\Type;
 
 use Countable;
 use Iterator;
+use JetBrains\PhpStorm\Deprecated;
 use ReturnTypeWillChange;
 use Traversable;
 
+#[Deprecated(
+    'Still under review. Use Record where able, and log edge cases in Focus.',
+    Record::class
+)]
 class Collection implements Countable, Traversable, Iterator
 {
 
 
-	private int   $position = 0;
-	private array $array    = [];
+    private int   $position = 0;
+    private array $array    = [];
 
 
-	public function __construct( array $array = [] ) {
-		$this->array = $array;
+    public function __construct( array $array = [] ) {
+        $this->array = $array;
 //		dump( $this);
-	}
+    }
 
-	public static function create( array $array = [] ) : static {
-		return new static( $array );
-	}
+    public static function create( array $array = [] ) : static {
+        return new static( $array );
+    }
 
-	public function add( array $value ) : void {
-		$this->array = array_merge( $this->array, $value );
-	}
+    public function add( array $value ) : void {
+        $this->array = array_merge( $this->array, $value );
+    }
 
-	public function count() : int {
-		return count( $this->array );
-	}
+    public function count() : int {
+        return count( $this->array );
+    }
 
-	public function rewind() : void {
-		$this->position = 0;
-	}
+    public function rewind() : void {
+        $this->position = 0;
+    }
 
-	#[ReturnTypeWillChange]
-	public function current() : mixed {
-		return $this->array[ $this->position ];
-	}
+    #[ReturnTypeWillChange]
+    public function current() : mixed {
+        return $this->array[ $this->position ];
+    }
 
-	public function key() : int {
-		return $this->position;
-	}
+    public function key() : int {
+        return $this->position;
+    }
 
 
-	public function next() : void {
-		++$this->position;
-	}
+    public function next() : void {
+        ++$this->position;
+    }
 
-	public function previous() : void {
-		--$this->position;
-	}
+    public function previous() : void {
+        --$this->position;
+    }
 
-	public function valid() : bool {
-		return isset( $this->array[ $this->position ] );
-	}
+    public function valid() : bool {
+        return isset( $this->array[ $this->position ] );
+    }
 }
