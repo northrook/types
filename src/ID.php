@@ -2,60 +2,55 @@
 
 namespace Northrook\Types;
 
-// TODO: https://www.php.net/manual/en/function.uniqid.php
-
-use Northrook\Support\Attributes\Development;
+use Northrook\Types\Interfaces\Printable;
+use Northrook\Types\Traits\PrintableTypeTrait;
 use Northrook\Types\Type\Type;
-use Stringable;
+use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Uid\Uuid;
 
-#[Development( 'started' )]
-class ID extends Type implements Stringable
+class ID extends Type implements Printable
 {
+    use PrintableTypeTrait;
 
-	public const TYPE = 'string';
+    public function __construct(
+        ?string     $id = null,
+        bool | Uuid $generate = false,
+    ) {
 
-//	protected string $value;
-	protected bool   $cryptographicallySecure = false;
-	protected bool     $quick                   = false;
+        if ( $id && !$generate ) {
+            $this->value = $this->validateIdString( $id );
+        }
 
-	protected function validate() : bool {
+        if ( true === $generate ) {
+            $id = new Ulid();
+        }
+        if ( $generate instanceof Uuid ) {
+            $id = $generate->toRfc4122();
+        }
 
-		if ( str_ends_with( $this->value, 'uuid' ) ) {
-			$this->value = uniqid( preg_split( ':', $this->value )[ 0 ], !$this->quick );
-		}
+        $this->value = $id;
 
-		return true;
-	}
+        parent::__construct();
+    }
 
-	public static function from( string | array $value, ?string $separator = null ) : self {
-		if ( is_array( $value ) ) {
-			$value = implode(
-				$separator ?? '.',
-				array_filter( $value ),
-			);
-		}
-		return new static(
-			value                   : $value,
-			validate                : true,
-			cryptographicallySecure : false,
-			quick                   : false
-		);
-	}
+    private function validateIdString( string $string ) : string {
 
-	/**
-	 * * Apply a prefix to generated UUID with `prefix:uuid`
-	 *
-	 * @param  string|null  $value  Will generate a UUID if not provided
-	 * @param  bool  $cryptographicallySecure  Will generate a cryptographically secure ID
-	 * @param  bool  $quick  Uses $more_entropy=false
-	 * @return ID
-	 */
-	static function type( ?string $value = 'uuid', bool $cryptographicallySecure = false, bool $quick = false ) : ID {
-		return new static(
-			value                   : $value ?? 'uuid',
-			validate                : true,
-			cryptographicallySecure : $cryptographicallySecure,
-			quick                   : $quick
-		);
-	}
+        if ( preg_match( '/[^A-Za-z0-9_-]/', $string ) ) {
+            trigger_error(
+                "Invalid property name: \"$string\".<br>
+                 Property names may only contain alphanumeric characters and underscores.<br>",
+                E_USER_ERROR,
+            );
+        }
+
+        if ( str_contains( $string, '-' ) ) {
+            trigger_error(
+                "Property name \"$string\" cannot contain hyphens.<br>Hyphens have been converted to underscores.<br>",
+            );
+            $string = str_replace( '-', '_', $string );
+        }
+
+        return $string;
+    }
+
 }

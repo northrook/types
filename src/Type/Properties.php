@@ -4,6 +4,9 @@ declare( strict_types = 1 );
 
 namespace Northrook\Types\Type;
 
+use Northrook\Logger\Log;
+use Northrook\Logger\Status\HTTP;
+use Northrook\Types\Exception\InvalidPropertyNameException;
 use Northrook\Types\Internal\Cache;
 use Northrook\Types\Traits\ReadonlyPropertiesTrait;
 use ReflectionException;
@@ -39,6 +42,21 @@ abstract class Properties extends stdClass
         $set = new static();
 
         foreach ( $properties as $key => $value ) {
+            if ( false === is_string( $key ) || empty( $key ) ) {
+                Log::Alert(
+                    'Invalid property name {name} in {propertiesClass}, property name must be a {type}. The property has not been set.',
+                    [
+                        'name'            => $key,
+                        'propertiesClass' => static::class,
+                        'type'            => 'string',
+                        'exception'       => new InvalidPropertyNameException(
+                            message : 'Property name must be a string.',
+                            code    : HTTP::UNPROCESSABLE_ENTITY
+                        ),
+                    ],
+                );
+                continue;
+            }
             $set->$key = $value;
         }
 

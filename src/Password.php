@@ -1,64 +1,53 @@
-<?php declare ( strict_types = 1 );
+<?php
 
 namespace Northrook\Types;
 
-use Northrook\Support\Attributes\Development;
-use Northrook\Types\Type\Type;
-use Stringable;
-use ZxcvbnPhp\Zxcvbn;
+use JetBrains\PhpStorm\ExpectedValues;
+use Northrook\Core\PasswordValidator;
+use Northrook\Types\Interfaces\Printable;
+use Northrook\Types\Internal\Options;
+use Northrook\Types\Traits\PrintableTypeTrait;
+use Northrook\Types\Type\Validated;
+use SensitiveParameter;
 
-#[Development( 'mvp' )]
-class Password extends Type implements Stringable
+
+/**
+ */
+class Password extends Validated implements Printable
 {
+    use PrintableTypeTrait;
 
-	public const TYPE = 'string';
+    public readonly PasswordValidator $validator;
+    public readonly int               $strength;
+    private readonly int              $minimumStrength;
 
-	private static int $defaultStrength = 3;
+    public function __construct(
+        #[SensitiveParameter]
+        string                 $password,
+        #[SensitiveParameter]
+        private readonly array $context = [],
+        #[ExpectedValues( [ 0, 1, 2, 3, 4 ] )]
+        ?int                   $minimumStrength = null,
+    ) {
+        $this->value = $password;
 
-	protected readonly int $minimumStrength;
-	protected readonly int $strength;
-	protected array        $context = [];
-	public readonly array  $score;
+        $minimumStrength ??= Options::get( 'password' )[ 'minimumStrength' ] ?? 3;
+
+        $this->minimumStrength = max( 0, min( 4, $minimumStrength ) );
 
 
-	public static function setDefaultStrength( int $strength ) : void {
-		self::$defaultStrength = $strength;
-	}
+        parent::__construct();
+    }
 
-	public static function type(
-		?string $string = null,
-		?int    $strength = null,
-		array   $context = [],
-		bool    $validate = true,
-	) : Password {
-		return new static(
-			value           : $string,
-			validate        : $validate,
-			minimunStrength : $strength ?? self::$defaultStrength,
-			context         : $context,
-		);
-	}
+    protected function validate() : bool {
 
-	private function minimumStrength() : int {
-		return max( 0, min( 4, $this->minimumStrength ) );
-	}
+        $this->validator = new PasswordValidator( $this->value, $this->context );
+        $this->strength  = $this->validator->strength;
 
-	protected function validate() : bool {
+        if ( $this->strength < $this->minimumStrength ) {
+            return false;
+        }
 
-		$validator = new Zxcvbn();
-
-		$this->score = $validator->passwordStrength( $this->value ?? '', $this->context );
-
-		$this->strength = $this->score[ 'score' ] ?? 0;
-
-		if ( $this->strength < $this->minimumStrength() ) {
-			$this->isValid = false;
-		}
-		else {
-			$this->isValid = true;
-		}
-
-		return $this->isValid;
-	}
-
+        return true;
+    }
 }

@@ -3,72 +3,76 @@
 namespace Northrook\Types;
 
 use Northrook\Support\Attributes\Development;
-use Northrook\Types\Type\Type;
-use Stringable;
+use Northrook\Types\Interfaces\Printable;
+use Northrook\Types\Traits\PrintableTypeTrait;
+use Northrook\Types\Traits\ValueHistoryTrait;
+use Northrook\Types\Type\Validated;
 
 #[Development( 'mvp' )]
-class Path extends Type implements Stringable
+class Path extends Validated implements Printable
 {
-	protected const TYPE = 'path';
 
-	public static function type(
-		?string $string = null,
-	) : Path {
-		return new static( $string );
-	}
+    use PrintableTypeTrait;
+    use ValueHistoryTrait;
 
-	protected function validate() : bool {
-		$this->value = static::normalize( $this->value );
+    public function __construct( string $value ) {
+        $this->value = $value;
+        parent::__construct();
+    }
 
-		return file_exists( $this->value );
-	}
+    protected function validate() : bool {
+        $this->value = static::normalize( $this->value );
 
-	public function set( string $string ) : Path {
-		$this->updateValue( $string );
+        return file_exists( $this->value );
+    }
 
-		return $this;
-	}
+    public function set( string $string ) : Path {
+        $this->updateValue( $string );
 
-	public function add( string $string ) : Path {
-		$this->updateValue( $this->value . $string );
+        return $this;
+    }
 
-		return $this;
-	}
+    public function add( string $string ) : Path {
+        $this->updateValue( $this->value . $string );
 
-	/**
-	 * @param  string  $string
-	 * @return string
-	 */
-	public static function normalize( string $string ) : string {
+        return $this;
+    }
 
-		$string = mb_strtolower( strtr( $string, "\\", "/" ) );
+    /**
+     * @param string  $string
+     *
+     * @return string
+     */
+    public static function normalize( string $string ) : string {
 
-		if ( str_contains( $string, '/' ) === false ) {
-			return $string;
-		}
+        $string = mb_strtolower( strtr( $string, "\\", "/" ) );
 
-		$path = [];
+        if ( str_contains( $string, '/' ) === false ) {
+            return $string;
+        }
 
-		foreach ( array_filter( explode( '/', $string ) ) as $part ) {
-			if ( $part === '..' && $path && end( $path ) !== '..' ) {
-				array_pop( $path );
-			}
-			else {
-				if ( $part !== '.' ) {
-					$path[] = trim( $part );
-				}
-			}
-		}
+        $path = [];
 
-		$path = implode(
-			separator : DIRECTORY_SEPARATOR,
-			array     : $path,
-		);
+        foreach ( array_filter( explode( '/', $string ) ) as $part ) {
+            if ( $part === '..' && $path && end( $path ) !== '..' ) {
+                array_pop( $path );
+            }
+            else {
+                if ( $part !== '.' ) {
+                    $path[] = trim( $part );
+                }
+            }
+        }
 
-		if ( false === isset( pathinfo( $path )[ 'extension' ] ) ) {
-			$path .= DIRECTORY_SEPARATOR;
-		}
+        $path = implode(
+            separator : DIRECTORY_SEPARATOR,
+            array     : $path,
+        );
 
-		return $path;
-	}
+        if ( false === isset( pathinfo( $path )[ 'extension' ] ) ) {
+            $path .= DIRECTORY_SEPARATOR;
+        }
+
+        return $path;
+    }
 }

@@ -1,78 +1,47 @@
-<?php declare ( strict_types = 1 );
+<?php
 
 namespace Northrook\Types;
 
-use Egulias\EmailValidator\EmailValidator;
-use Egulias\EmailValidator\Validation\Extra\SpoofCheckValidation;
-use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
-use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
-use LogicException;
-use Northrook\Support\Attributes\Development;
-use Northrook\Types\Type\Type;
-use Stringable;
+use Northrook\Core\EmailValidator;
+use Northrook\Types\Interfaces\Printable;
+use Northrook\Types\Traits\PrintableTypeTrait;
+use Northrook\Types\Type\Validated;
 
-// TODO: Support blacklist and whitelist words, domains and tlds
-
-#[Development( 'mvp' )]
-class Email extends Type implements Stringable
+class Email extends Validated implements Printable
 {
+    use PrintableTypeTrait;
 
-	public const TYPE = '?string';
+    public readonly EmailValidator $validator;
+    public readonly string         $username;
+    public readonly string         $domain;
+    public readonly string         $tld;
 
-	protected string $username;
-	protected string $domain;
-	protected string $tld;
+    public function __construct(
+        string $email,
+    ) {
+        $this->value = $email;
 
-	public function update( ?string $value ) : Email {
-		$this->updateValue( $value );
+        parent::__construct();
+    }
 
-		return $this;
-	}
 
-	public static function type( ?string $string = null, bool $validate = true ) : self {
-		return new static( $string, $validate );
-	}
+    protected function validate() : bool {
+        $this->validator = new EmailValidator( $this->value );
 
-	private function explodeEmail() : void {
+        if ( $this->validator->isValid ) {
+            $this->explodeEmail();
+        }
 
-		$email = explode( '@', (string) $this->value );
-		$this->username = $email[ 0 ];
-		$this->domain = strstr( $email[ 1 ], '.', true );
-		$this->tld = substr( $email[ 1 ], strpos( $email[ 1 ], '.' ) + 1 );
+        return $this->validator->isValid;
+    }
 
-	}
+    private function explodeEmail() : void {
 
-	protected function validate() : bool {
+        $email          = explode( '@', (string) $this->value );
+        $this->username = $email[ 0 ];
+        $this->domain   = strstr( $email[ 1 ], '.', true );
+        $this->tld      = substr( $email[ 1 ], strpos( $email[ 1 ], '.' ) + 1 );
 
-		if ( $this->validType( 'null' ) ) {
-			return true;
-		}
-
-		if ( !class_exists( EmailValidator::class ) ) {
-			throw new LogicException(
-				'EmailValidator not installed. Ensure that the "egulias/email-validator" package is installed.'
-			);
-		}
-
-		$validator = new EmailValidator();
-
-		$validate = new MultipleValidationWithAnd( [
-			                                           new NoRFCWarningsValidation(),
-			                                           new SpoofCheckValidation(),
-		                                           ] );
-
-		// \var_dump($validator);
-
-		$this->isValid = $validator->isValid(
-			$this->value ?? '',
-			$validate,
-		);
-
-		if ( $this->isValid ) {
-			$this->explodeEmail();
-		}
-
-		return $this->isValid;
-	}
+    }
 
 }

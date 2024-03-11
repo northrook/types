@@ -2,38 +2,38 @@
 
 namespace Northrook\Types;
 
-use Northrook\Support\Attributes\Development;
-use Northrook\Types\Type\Type;
+use Northrook\Types\Interfaces\Printable;
+use Northrook\Types\Traits\PrintableTypeTrait;
+use Northrook\Types\Type\Validated;
 
-#[Development( 'pending' )]
-class Url extends Type
+class Url extends Validated implements Printable
 {
-	private static string $rootPath;
+    use PrintableTypeTrait;
 
-	protected bool         $isAbsolute = false;
-	public readonly string $path;
-	public readonly string $url;
-
-
-	public function __construct(
-		?string $string = null,
-		?string $rootPath = null,
-	) {
-		$this->rootPath( $rootPath ?? $_SERVER[ 'DOCUMENT_ROOT' ] );
+    private static string  $rootPath;
+    public readonly string $path;
+    public readonly string $url;
+    protected bool         $isAbsolute = false;
 
 
-	}
+    public function __construct(
+        string $path,
+    ) {
 
-	private function rootPath( string $path ) : void {
-		if ( isset( $this::$rootPath ) ) {
-			return;
-		}
 
-		$this::$rootPath = $path;
+        // What we start with
+        $this->value = $path;
 
-	}
+        // Validate if refers to local, or external
+        // Validate endpoint exists
+        // Cache endpoint in a file? We don't want to keep revalidating each time
+        // Revalidate if endpoint changes, or after a certain amount of time (like a day)
 
-	public static function type( ?string $string = null, ?string $rootPath = null ) : Url {
-		return new static( $string, $rootPath );
-	}
+        parent::__construct();
+    }
+
+
+    protected function validate() : bool {
+        return true;
+    }
 }
