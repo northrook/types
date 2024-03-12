@@ -9,6 +9,10 @@ use Northrook\Logger\Log;
  */
 trait PrintableTypeTrait
 {
+    public function __toString() : string {
+        return $this->print();
+    }
+    
     public function print() : string {
         if ( method_exists( $this, 'isValid' ) && false === $this->isValid() ) {
             Log::error(

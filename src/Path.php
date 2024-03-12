@@ -1,17 +1,17 @@
-<?php declare ( strict_types = 1 );
+<?php
+
+declare ( strict_types = 1 );
 
 namespace Northrook\Types;
 
-use Northrook\Support\Attributes\Development;
 use Northrook\Types\Interfaces\Printable;
 use Northrook\Types\Traits\PrintableTypeTrait;
 use Northrook\Types\Traits\ValueHistoryTrait;
 use Northrook\Types\Type\Validated;
+use Stringable;
 
-#[Development( 'mvp' )]
-class Path extends Validated implements Printable
+class Path extends Validated implements Printable, Stringable
 {
-
     use PrintableTypeTrait;
     use ValueHistoryTrait;
 
@@ -75,4 +75,5 @@ class Path extends Validated implements Printable
 
         return $path;
     }
+
 }
