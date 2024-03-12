@@ -1,5 +1,7 @@
 <?php
 
+declare( strict_types = 1 );
+
 namespace Northrook\Types\Traits;
 
 use Northrook\Logger\Log;
@@ -9,13 +11,12 @@ use Northrook\Logger\Log;
  */
 trait ValueHistoryTrait
 {
-
     protected array $history = [];
 
     public function updateValue( $value ) : void {
         $this->value = $value;
 
-        if ( method_exists( $this, 'validate' ) && !$this->validate( $value ) ) {
+        if ( method_exists( $this, 'validate' ) && !$this->validate() ) {
             if ( !empty( $this->history ) ) {
 
                 $last = array_pop( $this->history );

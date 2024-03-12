@@ -1,7 +1,8 @@
 <?php
 
-namespace Northrook\Types\Type;
+declare( strict_types = 1 );
 
+namespace Northrook\Types\Type;
 
 use Northrook\Types\Traits\PropertyAccessTrait;
 
