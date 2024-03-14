@@ -18,7 +18,7 @@ trait PrintableTypeTrait
     public function print() : string {
         if ( method_exists( $this, 'isValid' ) && false === $this->isValid() ) {
             Log::error(
-                'The type {class} printed, but did not pass validation.', [
+                'The type {class} was printed, but did not pass validation.', [
                 'class' => $this::class,
                 'value' => $this->value,
                 'type'  => $this,

@@ -16,7 +16,7 @@ class Path extends Validated implements Printable, Stringable
     use ValueHistoryTrait;
 
     public function __construct( string $value ) {
-        $this->value = $value;
+        $this->updateValue( $value );
         parent::__construct();
     }
 
