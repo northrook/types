@@ -47,33 +47,36 @@ class Path extends Validated implements Printable, Stringable
 
         $string = mb_strtolower( strtr( $string, "\\", "/" ) );
 
-        if ( str_contains( $string, '/' ) === false ) {
-            return $string;
-        }
+        if ( str_contains( $string, '/' ) ) {
 
-        $path = [];
+            $path = [];
 
-        foreach ( array_filter( explode( '/', $string ) ) as $part ) {
-            if ( $part === '..' && $path && end( $path ) !== '..' ) {
-                array_pop( $path );
-            }
-            else {
-                if ( $part !== '.' ) {
-                    $path[] = trim( $part );
+            foreach ( array_filter( explode( '/', $string ) ) as $part ) {
+                if ( $part === '..' && $path && end( $path ) !== '..' ) {
+                    array_pop( $path );
+                }
+                else {
+                    if ( $part !== '.' ) {
+                        $path[] = trim( $part );
+                    }
                 }
             }
+
+            $path = implode(
+                separator : DIRECTORY_SEPARATOR,
+                array     : $path,
+            );
+        }
+        else {
+            $path = $string;
         }
 
-        $path = implode(
-            separator : DIRECTORY_SEPARATOR,
-            array     : $path,
-        );
-
-        if ( false === isset( pathinfo( $path )[ 'extension' ] ) ) {
-            $path .= DIRECTORY_SEPARATOR;
+        // If the string contains a valid extension, return it as-is
+        if ( isset( pathinfo( $path )[ 'extension' ] ) && !str_contains( pathinfo( $path )[ 'extension' ], '%' ) ) {
+            return $path;
         }
 
-        return $path;
+        return $path . DIRECTORY_SEPARATOR;
     }
 
 }

@@ -256,12 +256,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/northrook/logger.git",
-                "reference": "9f0d3b673aba6a57f710a35c1b3d1377238cefe1"
+                "reference": "b9a55767e98681331c0a442ff71d3673cf5f7758"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/northrook/logger/zipball/9f0d3b673aba6a57f710a35c1b3d1377238cefe1",
-                "reference": "9f0d3b673aba6a57f710a35c1b3d1377238cefe1",
+                "url": "https://api.github.com/repos/northrook/logger/zipball/b9a55767e98681331c0a442ff71d3673cf5f7758",
+                "reference": "b9a55767e98681331c0a442ff71d3673cf5f7758",
                 "shasum": ""
             },
             "require": {
@@ -290,7 +290,7 @@
                 "issues": "https://github.com/northrook/logger/issues",
                 "source": "https://github.com/northrook/logger/tree/main"
             },
-            "time": "2024-03-10T15:07:28+00:00"
+            "time": "2024-03-12T10:49:02+00:00"
         },
         {
             "name": "northrook/password-validator",
