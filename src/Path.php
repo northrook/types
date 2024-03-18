@@ -10,6 +10,9 @@ use Northrook\Types\Traits\ValueHistoryTrait;
 use Northrook\Types\Type\Validated;
 use Stringable;
 
+/**
+ * @property ?string $extension
+ */
 class Path extends Validated implements Printable, Stringable
 {
     use PrintableTypeTrait;
@@ -18,6 +21,10 @@ class Path extends Validated implements Printable, Stringable
     public function __construct( string $value ) {
         $this->updateValue( $value );
         parent::__construct();
+    }
+
+    protected function extension() : ?string {
+        return pathinfo( $this->value, PATHINFO_EXTENSION );
     }
 
     protected function validate() : bool {
