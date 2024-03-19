@@ -16,9 +16,8 @@ abstract class Type
     use PropertyAccessTrait;
 
     public const TYPE = null;
-
-    public readonly string $type;
     protected mixed        $value;
+    public readonly string $type;
 
     public function __construct() {
         if ( false === isset( $this->value ) ) {

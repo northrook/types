@@ -12,7 +12,7 @@ namespace Northrook\Types\Type;
 abstract class Validated extends Type
 {
 
-    protected readonly bool $isValid;
+    protected bool $isValid;
 
     abstract protected function validate() : bool;
 
@@ -20,6 +20,6 @@ abstract class Validated extends Type
      * @internal
      */
     protected function isValid() : bool {
-        return $this->isValid ??= $this->validate();
+        return $this->isValid ?? $this->validate();
     }
 }
