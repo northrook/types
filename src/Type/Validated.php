@@ -12,7 +12,7 @@ namespace Northrook\Types\Type;
 abstract class Validated extends Type
 {
 
-    protected bool $isValid;
+    protected bool $isValid = false;
 
     abstract protected function validate() : bool;
 

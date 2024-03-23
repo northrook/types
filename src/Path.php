@@ -11,6 +11,7 @@ use Northrook\Types\Type\Validated;
 use Stringable;
 
 /**
+ * @property string  $filename
  * @property ?string $extension
  * @property bool    $exists
  * @property bool    $isDir
@@ -20,9 +21,15 @@ class Path extends Validated implements Printable, Stringable
     use PrintableTypeTrait;
     use ValueHistoryTrait;
 
+    private array $pathinfo;
+
     public function __construct( string $value ) {
         $this->updateValue( $value );
         parent::__construct();
+    }
+
+    protected function filename() : string {
+        return $this->pathinfo( 'filename' );
     }
 
     /**
@@ -33,7 +40,7 @@ class Path extends Validated implements Printable, Stringable
      * @return null|string
      */
     protected function extension() : ?string {
-        return pathinfo( $this->value, PATHINFO_EXTENSION ) ?: ( $this->isDir ? 'dir' : null );
+        return $this->pathinfo( 'extension' ) ?: ( $this->isDir ? 'dir' : null );
     }
 
     /**
@@ -153,6 +160,16 @@ class Path extends Validated implements Printable, Stringable
         }
 
         return $trailingSlash ? $path . DIRECTORY_SEPARATOR : $path;
+    }
+
+    protected function pathinfo( ?string $get = null ) : null | string | array {
+        $this->pathinfo ??= pathinfo( $this->value );
+
+        if ( $get ) {
+            return $this->pathinfo[ $get ] ?? null;
+        }
+
+        return $this->pathinfo;
     }
 
 }
