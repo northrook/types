@@ -11,5 +11,4 @@ composer.lock
 
 # Build data
 /build/
-*.php/
-index.php
+*.php
