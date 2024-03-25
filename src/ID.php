@@ -45,12 +45,12 @@ class ID extends Type implements Printable
             );
         }
 
-        if ( str_contains( $string, '-' ) ) {
-            trigger_error(
-                "Property name \"$string\" cannot contain hyphens.<br>Hyphens have been converted to underscores.<br>",
-            );
-            $string = str_replace( '-', '_', $string );
-        }
+        // if ( str_contains( $string, '-' ) ) {
+        //     trigger_error(
+        //         "Property name \"$string\" cannot contain hyphens.<br>Hyphens have been converted to underscores.<br>",
+        //     );
+        //     $string = str_replace( '-', '_', $string );
+        // }
 
         return $string;
     }
