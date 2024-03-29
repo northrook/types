@@ -23,7 +23,7 @@ class Hex extends Type implements Printable, Stringable
             Log::Error(
                 'The type {class} was created, but did not pass validation.',
                 [
-                    `class` => `Color\Hex`,
+                    'class' => 'Color\Hex',
                     'value' => $this->value,
                     'type'  => $this,
                 ],
