@@ -24,6 +24,11 @@ class Path extends Validated implements Printable, Stringable
     private array $pathinfo;
 
     public function __construct( string $value ) {
+        trigger_deprecation(
+            $this::class,
+            '1.0.0',
+            $this::class . ' is deprecated, use Northrook\Type instead',
+        );
         $this->updateValue( $value );
         parent::__construct();
     }

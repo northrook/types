@@ -13,14 +13,18 @@ class Url extends Validated implements Printable
     use PrintableTypeTrait;
 
     private static string  $rootPath;
+    protected bool         $isAbsolute = false;
     public readonly string $path;
     public readonly string $url;
-    protected bool         $isAbsolute = false;
-
 
     public function __construct(
         string $path,
     ) {
+        trigger_deprecation(
+            $this::class,
+            '1.0.0',
+            $this::class . ' is deprecated, use Northrook\Type instead',
+        );
 
 
         // What we start with

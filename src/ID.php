@@ -18,6 +18,11 @@ class ID extends Type implements Printable
         ?string     $id = null,
         bool | Uuid $generate = false,
     ) {
+        trigger_deprecation(
+            $this::class,
+            '1.0.0',
+            $this::class . ' is deprecated, use Northrook\Type instead',
+        );
 
         if ( $id && !$generate ) {
             $this->value = $this->validateIdString( $id );

@@ -17,7 +17,13 @@ final class Cache
      */
     private static array $reflectionCache = [];
 
-    private function __construct() {}
+    private function __construct() {
+        trigger_deprecation(
+            $this::class,
+            '1.0.0',
+            $this::class . ' is deprecated, use Northrook\Type instead',
+        );
+    }
 
     private function __clone() {}
 

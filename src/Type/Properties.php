@@ -5,7 +5,6 @@ declare( strict_types = 1 );
 namespace Northrook\Types\Type;
 
 use Northrook\Logger\Log;
-use Northrook\Logger\Status\HTTP;
 use Northrook\Types\Exception\InvalidPropertyNameException;
 use Northrook\Types\Internal\Cache;
 use Northrook\Types\Traits\ReadonlyPropertiesTrait;
@@ -51,7 +50,7 @@ abstract class Properties extends stdClass
                         'type'            => 'string',
                         'exception'       => new InvalidPropertyNameException(
                             message : 'Property name must be a string.',
-                            code    : HTTP::UNPROCESSABLE_ENTITY
+                            code    : HTTP::UNPROCESSABLE_ENTITY,
                         ),
                     ],
                 );

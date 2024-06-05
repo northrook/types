@@ -13,6 +13,12 @@ class Hex extends Type implements Printable, Stringable
     public function __construct(
         string $color,
     ) {
+        trigger_deprecation(
+            $this::class,
+            '1.0.0',
+            $this::class . ' is deprecated, use Northrook\Type instead',
+        );
+        
         $this->value = strtolower( $color );
 
         if ( $this->value[ 0 ] !== '#' ) {

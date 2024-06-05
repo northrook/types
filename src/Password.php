@@ -20,9 +20,9 @@ class Password extends Validated implements Printable
 {
     use PrintableTypeTrait;
 
+    private readonly int              $minimumStrength;
     public readonly PasswordValidator $validator;
     public readonly int               $strength;
-    private readonly int              $minimumStrength;
 
     public function __construct(
         #[SensitiveParameter]
@@ -32,6 +32,11 @@ class Password extends Validated implements Printable
         #[ExpectedValues( [ 0, 1, 2, 3, 4 ] )]
         ?int                   $minimumStrength = null,
     ) {
+        trigger_deprecation(
+            $this::class,
+            '1.0.0',
+            $this::class . ' is deprecated, use Northrook\Type instead',
+        );
         $this->value = $password;
 
         $minimumStrength ??= Options::get( 'password' )[ 'minimumStrength' ] ?? 3;

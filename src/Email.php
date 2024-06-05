@@ -10,6 +10,7 @@ use Northrook\Types\Interfaces\Printable;
 use Northrook\Types\Traits\PrintableTypeTrait;
 use Northrook\Types\Type\Validated;
 
+
 class Email extends Validated implements Printable
 {
     use PrintableTypeTrait;
@@ -22,6 +23,12 @@ class Email extends Validated implements Printable
     public function __construct(
         string $email,
     ) {
+        trigger_deprecation(
+            $this::class,
+            '1.0.0',
+            $this::class . ' is deprecated, use Northrook\Type instead',
+        );
+
         $this->value = $email;
 
         parent::__construct();
