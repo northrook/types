@@ -3,6 +3,7 @@
 namespace Northrook\Type;
 
 use Northrook\Core\Trait\PropertyAccessor;
+use Northrook\Support\File;
 use Northrook\Support\Str\PathFunctions;
 use Northrook\Type\Interface\PathType;
 use Northrook\Type\Internal\Type;
@@ -21,12 +22,14 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
  * @property-read  bool   $isUrl
  * @property-read  bool   $isWritable
  * @property-read  int    $lastModified
+ * @property-read  string $mimeType
  */
 final class Path extends Type implements PathType
 {
     use PropertyAccessor, ValueMemoizationCache, PathFunctions;
 
-    private array $pathInfo;
+    private array  $pathInfo;
+    private string $mimeType;
 
     protected string $value;
     protected bool   $isValid;
@@ -61,6 +64,7 @@ final class Path extends Type implements PathType
             'isWritable'   => is_writable( $this->value ),
             'isReadable'   => is_readable( $this->value ),
             'lastModified' => filemtime( $this->value ),
+            'mimeType'     => $this->mimeType ??= File::getMimeType( $this->value ),
             default        => null,
         };
     }
