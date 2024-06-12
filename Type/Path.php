@@ -69,6 +69,10 @@ final class Path extends Type implements PathType
         };
     }
 
+    public function toString( ?string $append = null ) : string {
+        return $append ? $this . DIRECTORY_SEPARATOR . ltrim( $append, '/\\' ) : $this;
+    }
+
     public function __toString() : string {
         $this->validate();
         return $this->value;

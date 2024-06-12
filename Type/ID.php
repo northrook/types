@@ -3,6 +3,7 @@
 namespace Northrook\Type;
 
 use JetBrains\PhpStorm\ExpectedValues;
+use Northrook\Core\Trait\PropertyAccessor;
 use Northrook\Type\Interface\IdType;
 use Northrook\Type\Internal\Type;
 use Symfony\Component\Uid\Ulid;
@@ -10,7 +11,7 @@ use Symfony\Component\Uid\Uuid;
 
 class ID extends Type implements IdType
 {
-
+    use PropertyAccessor;
 
     private const DEFAULT_ALGORITHM = 'ulid';
 
