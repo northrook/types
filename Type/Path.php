@@ -70,7 +70,7 @@ final class Path extends Type implements PathType
     }
 
     public function toString( ?string $append = null ) : string {
-        return $append ? $this . DIRECTORY_SEPARATOR . ltrim( $append, '/\\' ) : $this;
+        return $append ? rtrim( $this, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR . trim( $append, '/\\' ) : $this;
     }
 
     public function __toString() : string {
